@@ -39,12 +39,12 @@ server.post("/tasks", function(req, res){
 })
 
 server.put("/tasks/status", function(req,res){
-  Task.update(
+  Task.findOneAndUpdate(
     {title: req.body.title}, 
     {$set: {status: req.body.status}}, 
     {new: true}
-  ).then(res=>{
-    res.json();
+  ).then(data=>{
+    res.json(data);
   })
 })
 
