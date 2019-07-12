@@ -9,9 +9,23 @@ server.use(bodyParser.urlencoded({ extended: false })) //for urlencoded data bod
 const morgan = require('morgan');
 server.use(morgan('dev'));
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/todolist', {useNewUrlParser: true});
+// mongoose.connect('mongodb://localhost:27017/todolist', {useNewUrlParser: true});
+const path = require("path");
 
-const session = require('express-session')
+const session = require('express-session');
+
+
+mongoose
+  .connect(
+    "mongodb+srv://crunchy_pasta:crunchy_pasta@cluster0-wrrnp.mongodb.net/",{dbName:'Todo'} // Change test to name of your DB
+  )
+  .then(() => {
+    console.log("Connected to database!");
+  })
+  .catch((error) => {
+    console.log("Connection failed!");
+    console.log(error);
+  });
 
 const Schema = mongoose.Schema;
 
@@ -189,6 +203,10 @@ server.post("/login",function(req,res){
     res.json(req.body);
 }) */
 
-server.listen(8080,function(){
+server.listen(process.env.PORT,function(){
     console.log('server has started');    
 })
+
+server.get('*', function(req, res) {
+  res.sendFile('index.html', {root: path.join(__dirname, './build/')});
+});
